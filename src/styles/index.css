@@ -61,11 +61,9 @@
 
     /* Cinematic spotlight */
     .spotlight {
-        background: radial-gradient(
-            600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-            rgba(139, 92, 246, 0.06),
-            transparent 60%
-        );
+        background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(139, 92, 246, 0.06),
+                transparent 60%);
     }
 
     /* 3D perspective container */
@@ -74,15 +72,12 @@
         transform-style: preserve-3d;
     }
 
-    /* Cinematic text glow */
+    /* Cinematic text glow — subtle so gradient text stays crisp */
     .text-glow {
-        text-shadow: 0 0 40px rgba(139, 92, 246, 0.3),
-                     0 0 80px rgba(139, 92, 246, 0.15),
-                     0 0 120px rgba(34, 211, 238, 0.1);
+        filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.2));
     }
 
     .text-glow-sm {
-        text-shadow: 0 0 20px rgba(139, 92, 246, 0.25),
-                     0 0 40px rgba(139, 92, 246, 0.1);
+        filter: drop-shadow(0 0 12px rgba(139, 92, 246, 0.15));
     }
 }

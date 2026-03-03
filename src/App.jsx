@@ -18,7 +18,6 @@ const pageVariants = {
         opacity: 0,
         y: direction > 0 ? 80 : -80,
         scale: 0.96,
-        filter: "blur(6px)",
     }),
     animate: {
         opacity: 1,
@@ -34,7 +33,6 @@ const pageVariants = {
         opacity: 0,
         y: direction > 0 ? -60 : 60,
         scale: 0.97,
-        filter: "blur(4px)",
         transition: {
             duration: 0.5,
             ease: [0.22, 1, 0.36, 1],
@@ -167,8 +165,8 @@ export default function App() {
                         </span>
                         <motion.div
                             className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${activeSection === i
-                                    ? "bg-accent border-accent shadow-lg shadow-accent/50"
-                                    : "bg-transparent border-white/20 hover:border-accent/60"
+                                ? "bg-accent border-accent shadow-lg shadow-accent/50"
+                                : "bg-transparent border-white/20 hover:border-accent/60"
                                 }`}
                             animate={
                                 activeSection === i
