@@ -89,13 +89,11 @@ export default function Hero({ navigateTo }) {
                     </span>
                 </motion.div>
 
-                {/* Name — cinematic reveal */}
+                {/* Name */}
                 <motion.div {...fadeIn(0.3)} className="mb-6">
                     <div className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight">
                         <span className="text-white">Hi, I'm </span>
-                        <span className="gradient-text text-glow">
-                            <CinematicName text="Ushnish" />
-                        </span>
+                        <span className="gradient-text">Ushnish</span>
                     </div>
                 </motion.div>
 
