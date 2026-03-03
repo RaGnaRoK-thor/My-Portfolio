@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        overflow: hidden;
+    }
+
+    body {
+        font-family: "Inter", system-ui, sans-serif;
+        background-color: #0a0e1a;
+        color: #e2e8f0;
+        overflow: hidden;
+        height: 100vh;
+        width: 100vw;
+    }
+
+    #root {
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+    }
+
+    /* Custom scrollbar — hidden since no scrolling */
+    ::-webkit-scrollbar {
+        width: 0px;
+        display: none;
+    }
+
+    ::selection {
+        background-color: rgba(139, 92, 246, 0.3);
+        color: #fff;
+    }
+}
+
+@layer components {
+    .gradient-text {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-light via-cyan-400 to-accent;
+        background-size: 300%;
+        animation: gradientX 6s ease infinite;
+    }
+
+    .glass {
+        @apply bg-white/[0.04] backdrop-blur-xl border border-white/[0.08];
+    }
+
+    .glass-hover {
+        @apply hover:bg-white/[0.08] hover:border-white/[0.15] transition-all duration-300;
+    }
+
+    .glow-orb {
+        @apply absolute rounded-full blur-3xl opacity-30 pointer-events-none;
+    }
+
+    /* Cinematic spotlight */
+    .spotlight {
+        background: radial-gradient(
+            600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            rgba(139, 92, 246, 0.06),
+            transparent 60%
+        );
+    }
+
+    /* 3D perspective container */
+    .perspective-container {
+        perspective: 1200px;
+        transform-style: preserve-3d;
+    }
+
+    /* Cinematic text glow */
+    .text-glow {
+        text-shadow: 0 0 40px rgba(139, 92, 246, 0.3),
+                     0 0 80px rgba(139, 92, 246, 0.15),
+                     0 0 120px rgba(34, 211, 238, 0.1);
+    }
+
+    .text-glow-sm {
+        text-shadow: 0 0 20px rgba(139, 92, 246, 0.25),
+                     0 0 40px rgba(139, 92, 246, 0.1);
+    }
+}
