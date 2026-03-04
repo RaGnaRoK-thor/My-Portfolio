@@ -12,7 +12,6 @@ import {
 import {
     SiPython,
     SiJavascript,
-    SiTypescript,
     SiReact,
     SiFastapi,
     SiNextdotjs,
@@ -21,7 +20,6 @@ import {
 const skills = [
     { name: "Python", icon: SiPython, color: "#3776AB" },
     { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E" },
-    { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
     { name: "React", icon: SiReact, color: "#61DAFB" },
     { name: "FastAPI", icon: SiFastapi, color: "#009688" },
     { name: "Next.js", icon: SiNextdotjs, color: "#ffffff" },
@@ -35,14 +33,6 @@ const skills = [
 ];
 
 const experiences = [
-    {
-        role: "Junior Full Stack Engineer Intern",
-        company: "NeuralArt Solutions",
-        period: "Aug 2025 – Present",
-        description:
-            "Developing AI-powered fraud detection system, building RESTful APIs with FastAPI, and implementing React dashboards.",
-        gradient: "from-accent to-purple-600",
-    },
     {
         role: "Freelance Salesforce Developer",
         company: "Self-Employed",
@@ -87,10 +77,10 @@ function SkillTag({ skill }) {
                 boxShadow: `0 8px 30px ${skill.color}30`,
             }}
             whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl glass glass-hover cursor-default perspective-container"
+            className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl glass glass-hover cursor-default perspective-container"
         >
-            <Icon style={{ color: skill.color }} className="text-lg flex-shrink-0" />
-            <span className="text-sm font-medium text-white/75">{skill.name}</span>
+            <Icon style={{ color: skill.color }} className="text-base sm:text-lg flex-shrink-0" />
+            <span className="text-xs sm:text-sm font-medium text-white/75">{skill.name}</span>
         </motion.div>
     );
 }
@@ -139,7 +129,7 @@ function TimelineCard({ exp, index, isLast }) {
 
 export default function About() {
     return (
-        <div className="w-full h-full flex items-center justify-center relative px-6 overflow-hidden">
+        <div className="w-full min-h-full flex items-center justify-center relative px-4 sm:px-6 py-20 sm:py-6">
             <motion.div
                 className="relative z-10 max-w-6xl w-full mx-auto"
                 variants={stagger}
@@ -147,47 +137,47 @@ export default function About() {
                 animate="visible"
             >
                 {/* Section title */}
-                <motion.div variants={fadeUp} className="text-center mb-10">
+                <motion.div variants={fadeUp} className="text-center mb-6 sm:mb-10">
                     <span className="inline-block text-[10px] font-mono text-accent-light/50 tracking-[0.2em] uppercase mb-2">
                         {"// who am I"}
                     </span>
-                    <h2 className="text-4xl sm:text-5xl font-black text-white mb-3">
+                    <h2 className="text-3xl sm:text-5xl font-black text-white mb-2 sm:mb-3">
                         About <span className="gradient-text text-glow-sm">Me</span>
                     </h2>
-                    <p className="text-white/30 max-w-xl mx-auto text-sm leading-relaxed">
+                    <p className="text-white/30 max-w-xl mx-auto text-xs sm:text-sm leading-relaxed">
                         A passionate fresher with hands-on freelance experience,
                         specializing in full-stack development and AI-powered solutions.
                     </p>
                 </motion.div>
 
-                <div className="grid lg:grid-cols-2 gap-8">
+                <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
                     {/* Left: Skills */}
                     <motion.div variants={stagger}>
                         <motion.h3
                             variants={fadeUp}
-                            className="text-base font-bold text-white mb-4 flex items-center gap-2"
+                            className="text-sm sm:text-base font-bold text-white mb-3 sm:mb-4 flex items-center gap-2"
                         >
                             <FiCode className="text-accent-light" />
                             Tech Stack
                         </motion.h3>
-                        <motion.div className="flex flex-wrap gap-2.5" variants={stagger}>
+                        <motion.div className="flex flex-wrap gap-2 sm:gap-2.5" variants={stagger}>
                             {skills.map((skill) => (
                                 <SkillTag key={skill.name} skill={skill} />
                             ))}
                         </motion.div>
 
                         {/* Stats */}
-                        <motion.div variants={stagger} className="grid grid-cols-3 gap-3 mt-6">
+                        <motion.div variants={stagger} className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-6">
                             {[
                                 { value: "4+", label: "Projects" },
-                                { value: "3+", label: "Roles" },
-                                { value: "13+", label: "Technologies" },
+                                { value: "2+", label: "Roles" },
+                                { value: "12+", label: "Technologies" },
                             ].map((stat) => (
                                 <motion.div
                                     key={stat.label}
                                     variants={fadeUp}
                                     whileHover={{ y: -3, scale: 1.03 }}
-                                    className="glass rounded-xl p-3 text-center"
+                                    className="glass rounded-xl p-2.5 sm:p-3 text-center"
                                 >
                                     <div className="text-xl font-black gradient-text">
                                         {stat.value}
@@ -204,7 +194,7 @@ export default function About() {
                     <motion.div variants={stagger}>
                         <motion.h3
                             variants={fadeUp}
-                            className="text-base font-bold text-white mb-4 flex items-center gap-2"
+                            className="text-sm sm:text-base font-bold text-white mb-3 sm:mb-4 flex items-center gap-2"
                         >
                             <FiTerminal className="text-cyan-400" />
                             Experience

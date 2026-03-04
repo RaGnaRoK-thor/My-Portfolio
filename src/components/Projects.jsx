@@ -177,7 +177,7 @@ function ProjectCard({ project }) {
 
 export default function Projects() {
     return (
-        <div className="w-full h-full flex items-center justify-center relative px-6 overflow-hidden">
+        <div className="w-full min-h-full flex items-center justify-center relative px-4 sm:px-6 py-20 sm:py-6">
             <motion.div
                 className="relative z-10 max-w-6xl w-full mx-auto"
                 variants={containerVariants}
@@ -185,14 +185,14 @@ export default function Projects() {
                 animate="visible"
             >
                 {/* Section title */}
-                <motion.div variants={cardVariants} className="text-center mb-10">
+                <motion.div variants={cardVariants} className="text-center mb-6 sm:mb-10">
                     <span className="inline-block text-[10px] font-mono text-accent-light/50 tracking-[0.2em] uppercase mb-2">
                         {"// featured work"}
                     </span>
-                    <h2 className="text-4xl sm:text-5xl font-black text-white mb-3">
+                    <h2 className="text-3xl sm:text-5xl font-black text-white mb-2 sm:mb-3">
                         My <span className="gradient-text text-glow-sm">Projects</span>
                     </h2>
-                    <p className="text-white/30 max-w-xl mx-auto text-sm leading-relaxed">
+                    <p className="text-white/30 max-w-xl mx-auto text-xs sm:text-sm leading-relaxed">
                         A selection of projects showcasing my passion for building
                         impactful applications with modern technologies.
                     </p>
@@ -200,7 +200,7 @@ export default function Projects() {
 
                 {/* Project grid */}
                 <motion.div
-                    className="grid md:grid-cols-2 gap-5"
+                    className="grid md:grid-cols-2 gap-4 sm:gap-5"
                     variants={containerVariants}
                 >
                     {projects.map((project) => (

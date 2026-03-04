@@ -7,6 +7,7 @@ export default {
             fontFamily: {
                 sans: ["Inter", "system-ui", "sans-serif"],
                 mono: ["Fira Code", "monospace"],
+                display: ["Space Grotesk", "Inter", "system-ui", "sans-serif"],
             },
             colors: {
                 navy: {

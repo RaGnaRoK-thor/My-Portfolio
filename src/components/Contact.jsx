@@ -125,7 +125,7 @@ function ContactCard({ link, index }) {
 
 export default function Contact() {
     return (
-        <div className="w-full h-full flex items-center justify-center relative px-6 overflow-hidden">
+        <div className="w-full min-h-full flex items-center justify-center relative px-4 sm:px-6 py-20 sm:py-6">
             <motion.div
                 className="relative z-10 max-w-3xl w-full mx-auto"
                 variants={stagger}
@@ -133,22 +133,22 @@ export default function Contact() {
                 animate="visible"
             >
                 {/* Section title */}
-                <motion.div variants={fadeUp} className="text-center mb-10">
+                <motion.div variants={fadeUp} className="text-center mb-6 sm:mb-10">
                     <span className="inline-block text-[10px] font-mono text-accent-light/50 tracking-[0.2em] uppercase mb-2">
                         {"// let's connect"}
                     </span>
-                    <h2 className="text-4xl sm:text-5xl font-black text-white mb-3">
+                    <h2 className="text-3xl sm:text-5xl font-black text-white mb-2 sm:mb-3">
                         Get in{" "}
                         <span className="gradient-text text-glow-sm">Touch</span>
                     </h2>
-                    <p className="text-white/30 max-w-md mx-auto text-sm leading-relaxed">
+                    <p className="text-white/30 max-w-md mx-auto text-xs sm:text-sm leading-relaxed">
                         I'm always open to discussing new opportunities,
                         projects, or just a conversation about tech.
                     </p>
                 </motion.div>
 
                 {/* CTA email button */}
-                <motion.div variants={fadeUp} className="text-center mb-8">
+                <motion.div variants={fadeUp} className="text-center mb-5 sm:mb-8">
                     <motion.a
                         href="mailto:ushnishchowdhury62@gmail.com"
                         whileHover={{
@@ -156,10 +156,10 @@ export default function Contact() {
                             boxShadow: "0 0 50px rgba(139,92,246,0.3)",
                         }}
                         whileTap={{ scale: 0.95 }}
-                        className="inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-white
+                        className="inline-flex items-center gap-2 sm:gap-3 px-6 py-3 sm:px-8 sm:py-4 rounded-full font-bold text-white
                             bg-gradient-to-r from-accent via-purple-500 to-cyan-500
                             shadow-xl shadow-accent/20 hover:shadow-accent/35
-                            transition-shadow duration-300 text-base"
+                            transition-shadow duration-300 text-sm sm:text-base"
                     >
                         <FiSend className="text-lg" />
                         Send Me a Message
@@ -177,7 +177,7 @@ export default function Contact() {
                 </motion.div>
 
                 {/* Footer */}
-                <motion.div variants={fadeUp} className="mt-12 text-center">
+                <motion.div variants={fadeUp} className="mt-8 sm:mt-12 text-center">
                     <div className="w-16 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mx-auto mb-4" />
                     <p className="text-[10px] text-white/20 flex items-center justify-center gap-1.5">
                         Built with{" "}

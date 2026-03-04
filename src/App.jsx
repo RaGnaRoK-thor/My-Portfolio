@@ -1,5 +1,5 @@
 // src/App.jsx
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./components/Navbar";
 import ParticleField from "./components/ParticleField";
@@ -44,6 +44,7 @@ export default function App() {
     const [activeSection, setActiveSection] = useState(0);
     const [direction, setDirection] = useState(1);
     const [isTransitioning, setIsTransitioning] = useState(false);
+    const visitCountRef = useRef(0);
 
     const navigateTo = useCallback(
         (index) => {
@@ -51,6 +52,7 @@ export default function App() {
             if (index < 0 || index >= sections.length) return;
             setIsTransitioning(true);
             setDirection(index > activeSection ? 1 : -1);
+            visitCountRef.current += 1;
             setActiveSection(index);
             setTimeout(() => setIsTransitioning(false), 800);
         },
@@ -78,10 +80,24 @@ export default function App() {
         return () => window.removeEventListener("keydown", handleKey);
     }, [activeSection, navigateTo]);
 
-    // Mouse wheel navigation
+    // Mouse wheel navigation — allow internal scrolling, navigate at edges
     useEffect(() => {
         let wheelTimeout = null;
         const handleWheel = (e) => {
+            // Find the scrollable section container
+            const container = document.querySelector('[data-section-container]');
+            if (container) {
+                const { scrollTop, scrollHeight, clientHeight } = container;
+                const atTop = scrollTop <= 1;
+                const atBottom = scrollTop + clientHeight >= scrollHeight - 1;
+                const isScrollable = scrollHeight > clientHeight + 2;
+
+                // If content is scrollable and not at an edge, let it scroll naturally
+                if (isScrollable && !((e.deltaY < 0 && atTop) || (e.deltaY > 0 && atBottom))) {
+                    return;
+                }
+            }
+
             e.preventDefault();
             if (wheelTimeout) return;
             wheelTimeout = setTimeout(() => {
@@ -97,18 +113,35 @@ export default function App() {
         return () => window.removeEventListener("wheel", handleWheel);
     }, [activeSection, navigateTo]);
 
-    // Touch swipe navigation
+    // Touch swipe navigation — allow internal scrolling, navigate at edges
     useEffect(() => {
         let touchStartY = 0;
+        let touchStartScrollTop = 0;
         const handleTouchStart = (e) => {
             touchStartY = e.touches[0].clientY;
+            const container = document.querySelector('[data-section-container]');
+            touchStartScrollTop = container ? container.scrollTop : 0;
         };
         const handleTouchEnd = (e) => {
             const delta = touchStartY - e.changedTouches[0].clientY;
-            if (Math.abs(delta) > 60) {
-                if (delta > 0) navigateTo(activeSection + 1);
-                else navigateTo(activeSection - 1);
+            if (Math.abs(delta) < 60) return;
+
+            const container = document.querySelector('[data-section-container]');
+            if (container) {
+                const { scrollTop, scrollHeight, clientHeight } = container;
+                const atTop = scrollTop <= 1;
+                const atBottom = scrollTop + clientHeight >= scrollHeight - 1;
+                const isScrollable = scrollHeight > clientHeight + 2;
+
+                // If content is scrollable and not at an edge, don't navigate
+                if (isScrollable) {
+                    if (delta > 0 && !atBottom) return;
+                    if (delta < 0 && !atTop) return;
+                }
             }
+
+            if (delta > 0) navigateTo(activeSection + 1);
+            else navigateTo(activeSection - 1);
         };
         window.addEventListener("touchstart", handleTouchStart, { passive: true });
         window.addEventListener("touchend", handleTouchEnd, { passive: true });
@@ -137,13 +170,14 @@ export default function App() {
             <div className="relative z-10 h-screen w-screen">
                 <AnimatePresence mode="wait" custom={direction}>
                     <motion.div
-                        key={activeSection}
+                        key={`${activeSection}-${visitCountRef.current}`}
                         custom={direction}
                         variants={pageVariants}
                         initial="initial"
                         animate="animate"
                         exit="exit"
-                        className="absolute inset-0 flex items-center justify-center"
+                        data-section-container
+                        className="absolute inset-0 overflow-y-auto"
                     >
                         <ActiveComponent navigateTo={navigateTo} />
                     </motion.div>
@@ -151,7 +185,7 @@ export default function App() {
             </div>
 
             {/* Side dot navigation */}
-            <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3">
+            <div className="hidden sm:flex fixed right-6 top-1/2 -translate-y-1/2 z-50 flex-col gap-3">
                 {sectionIds.map((id, i) => (
                     <button
                         key={id}
@@ -188,7 +222,7 @@ export default function App() {
             </div>
 
             {/* Bottom section counter */}
-            <div className="fixed bottom-6 left-6 z-50 flex items-center gap-3">
+            <div className="hidden sm:flex fixed bottom-6 left-6 z-50 items-center gap-3">
                 <span className="text-xs font-mono text-white/20">
                     {String(activeSection + 1).padStart(2, "0")} / {String(sections.length).padStart(2, "0")}
                 </span>

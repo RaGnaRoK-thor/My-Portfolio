@@ -7,8 +7,16 @@ import { FiGithub, FiLinkedin, FiMail, FiArrowDown } from "react-icons/fi";
 function TypedRole() {
     const fullText = "Full Stack Developer & AI Enthusiast";
     const [displayText, setDisplayText] = useState("");
+    const [started, setStarted] = useState(false);
+
+    // Wait for the parent fade-in animation to complete before typing
+    useEffect(() => {
+        const startDelay = setTimeout(() => setStarted(true), 1800);
+        return () => clearTimeout(startDelay);
+    }, []);
 
     useEffect(() => {
+        if (!started) return;
         let i = 0;
         const timer = setInterval(() => {
             if (i < fullText.length) {
@@ -19,7 +27,7 @@ function TypedRole() {
             }
         }, 35);
         return () => clearInterval(timer);
-    }, []);
+    }, [started]);
 
     // Render with & highlighted
     const parts = displayText.split("&");
@@ -28,7 +36,10 @@ function TypedRole() {
             {parts[0]}
             {parts.length > 1 && <span className="text-cyan-400">&amp;</span>}
             {parts.length > 1 && parts[1]}
-            <span className="inline-block w-[2px] h-5 bg-accent-light ml-1 animate-pulse" />
+            <span
+                className="inline-block w-[2px] h-5 bg-accent-light ml-1"
+                style={{ animation: "pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite" }}
+            />
         </span>
     );
 }
@@ -58,7 +69,7 @@ const fadeIn = (delay) => ({
 
 export default function Hero({ navigateTo }) {
     return (
-        <div className="w-full h-full flex items-center justify-center relative px-6">
+        <div className="w-full min-h-full flex items-center justify-center relative px-4 sm:px-6 py-20 sm:py-6">
             {/* Radial spotlight behind name */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <motion.div
@@ -82,16 +93,16 @@ export default function Hero({ navigateTo }) {
             {/* Content */}
             <div className="relative z-10 text-center max-w-4xl">
                 {/* Greeting badge */}
-                <motion.div {...fadeIn(0.2)} className="mb-8">
-                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium text-white/60">
+                <motion.div {...fadeIn(0.2)} className="mb-4 sm:mb-8">
+                    <span className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full glass text-xs sm:text-sm font-medium text-white/60">
                         <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                         Available for opportunities
                     </span>
                 </motion.div>
 
                 {/* Name */}
-                <motion.div {...fadeIn(0.3)} className="mb-6">
-                    <div className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight">
+                <motion.div {...fadeIn(0.3)} className="mb-3 sm:mb-6">
+                    <div className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight font-display">
                         <span className="text-white">Hi, I'm </span>
                         <span className="gradient-text">Ushnish</span>
                     </div>
@@ -100,7 +111,7 @@ export default function Hero({ navigateTo }) {
                 {/* Role typed out */}
                 <motion.div
                     {...fadeIn(1.6)}
-                    className="text-lg sm:text-xl md:text-2xl font-light text-white/40 mb-8 font-mono"
+                    className="text-sm sm:text-xl md:text-2xl font-light text-white/40 mb-4 sm:mb-8 font-mono"
                 >
                     <TypedRole />
                 </motion.div>
@@ -108,7 +119,7 @@ export default function Hero({ navigateTo }) {
                 {/* Tagline */}
                 <motion.p
                     {...fadeIn(2.2)}
-                    className="text-base sm:text-lg text-white/30 max-w-2xl mx-auto mb-10 leading-relaxed"
+                    className="text-sm sm:text-lg text-white/30 max-w-2xl mx-auto mb-6 sm:mb-10 leading-relaxed"
                 >
                     Fresher with freelance experience building{" "}
                     <span className="text-accent-light/70">AI-powered platforms</span>,{" "}
@@ -119,13 +130,13 @@ export default function Hero({ navigateTo }) {
                 {/* CTA buttons */}
                 <motion.div
                     {...fadeIn(2.5)}
-                    className="flex flex-wrap items-center justify-center gap-4 mb-12"
+                    className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-12"
                 >
                     <motion.button
                         onClick={() => navigateTo?.(2)}
                         whileHover={{ scale: 1.05, boxShadow: "0 0 40px rgba(139,92,246,0.35)" }}
                         whileTap={{ scale: 0.95 }}
-                        className="px-8 py-3.5 rounded-full font-semibold text-white
+                        className="px-6 py-3 sm:px-8 sm:py-3.5 rounded-full font-semibold text-white text-sm sm:text-base
                             bg-gradient-to-r from-accent to-cyan-500
                             shadow-lg shadow-accent/25 transition-all duration-300"
                     >
@@ -135,7 +146,7 @@ export default function Hero({ navigateTo }) {
                         href="mailto:ushnishchowdhury62@gmail.com"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="px-8 py-3.5 rounded-full font-semibold text-white/70
+                        className="px-6 py-3 sm:px-8 sm:py-3.5 rounded-full font-semibold text-white/70 text-sm sm:text-base
                             glass glass-hover"
                     >
                         Say Hello
@@ -170,7 +181,7 @@ export default function Hero({ navigateTo }) {
 
             {/* Scroll-down hint */}
             <motion.div
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
+                className="hidden sm:flex absolute bottom-10 left-1/2 -translate-x-1/2 flex-col items-center gap-2 cursor-pointer"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 3.2 }}
