@@ -1,9 +1,11 @@
 // src/components/ParticleField.jsx
 import React, { useRef, useEffect, useCallback } from "react";
 
-const PARTICLE_COUNT = 120;
-const CONNECTION_DISTANCE = 120;
-const MOUSE_RADIUS = 200;
+const PARTICLE_COUNT = 80;
+const CONNECTION_DISTANCE = 100;
+const CONNECTION_DIST_SQ = CONNECTION_DISTANCE * CONNECTION_DISTANCE;
+const MOUSE_RADIUS = 180;
+const MOUSE_RADIUS_SQ = MOUSE_RADIUS * MOUSE_RADIUS;
 
 export default function ParticleField() {
     const canvasRef = useRef(null);
@@ -17,11 +19,10 @@ export default function ParticleField() {
             particles.push({
                 x: Math.random() * w,
                 y: Math.random() * h,
-                vx: (Math.random() - 0.5) * 0.4,
-                vy: (Math.random() - 0.5) * 0.4,
+                vx: (Math.random() - 0.5) * 0.35,
+                vy: (Math.random() - 0.5) * 0.35,
                 radius: Math.random() * 1.8 + 0.5,
                 opacity: Math.random() * 0.5 + 0.2,
-                // Depth layer for parallax: 0 = far, 1 = close
                 depth: Math.random(),
             });
         }
@@ -31,17 +32,27 @@ export default function ParticleField() {
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
-        const ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext("2d", { alpha: true });
+        let dpr = Math.min(window.devicePixelRatio || 1, 2);
 
         const resize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            canvas.style.width = window.innerWidth + "px";
+            canvas.style.height = window.innerHeight + "px";
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             if (particlesRef.current.length === 0) {
-                particlesRef.current = initParticles(canvas.width, canvas.height);
+                particlesRef.current = initParticles(window.innerWidth, window.innerHeight);
             }
         };
 
+        // Throttle mouse events
+        let lastMouseUpdate = 0;
         const handleMouse = (e) => {
+            const now = performance.now();
+            if (now - lastMouseUpdate < 16) return; // ~60fps cap on mouse updates
+            lastMouseUpdate = now;
             mouseRef.current = { x: e.clientX, y: e.clientY };
         };
 
@@ -51,12 +62,15 @@ export default function ParticleField() {
 
         resize();
         window.addEventListener("resize", resize);
-        window.addEventListener("mousemove", handleMouse);
+        window.addEventListener("mousemove", handleMouse, { passive: true });
         window.addEventListener("mouseleave", handleMouseLeave);
 
+        // Pre-create the glow gradient once and reuse
+        let frameCount = 0;
+
         const animate = () => {
-            const w = canvas.width;
-            const h = canvas.height;
+            const w = window.innerWidth;
+            const h = window.innerHeight;
             ctx.clearRect(0, 0, w, h);
 
             const particles = particlesRef.current;
@@ -66,11 +80,12 @@ export default function ParticleField() {
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
 
-                // Mouse parallax push
+                // Mouse parallax push — use squared distance to avoid sqrt
                 const dx = mouse.x - p.x;
                 const dy = mouse.y - p.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < MOUSE_RADIUS) {
+                const distSq = dx * dx + dy * dy;
+                if (distSq < MOUSE_RADIUS_SQ && distSq > 0) {
+                    const dist = Math.sqrt(distSq);
                     const force = ((MOUSE_RADIUS - dist) / MOUSE_RADIUS) * 0.015 * (1 + p.depth);
                     p.vx -= dx * force;
                     p.vy -= dy * force;
@@ -97,29 +112,35 @@ export default function ParticleField() {
                 ctx.fill();
             }
 
-            // Draw connections
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
+            // Draw connections — only every other frame for performance
+            frameCount++;
+            if (frameCount % 2 === 0) {
+                ctx.lineWidth = 0.5;
+                for (let i = 0; i < particles.length; i++) {
                     const a = particles[i];
-                    const b = particles[j];
-                    const dx = a.x - b.x;
-                    const dy = a.y - b.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const b = particles[j];
+                        const dx = a.x - b.x;
+                        // Quick reject on single axis before computing full distance
+                        if (dx > CONNECTION_DISTANCE || dx < -CONNECTION_DISTANCE) continue;
+                        const dy = a.y - b.y;
+                        if (dy > CONNECTION_DISTANCE || dy < -CONNECTION_DISTANCE) continue;
+                        const distSq = dx * dx + dy * dy;
 
-                    if (dist < CONNECTION_DISTANCE) {
-                        const opacity = (1 - dist / CONNECTION_DISTANCE) * 0.12;
-                        ctx.beginPath();
-                        ctx.moveTo(a.x, a.y);
-                        ctx.lineTo(b.x, b.y);
-                        ctx.strokeStyle = `rgba(139, 92, 246, ${opacity})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.stroke();
+                        if (distSq < CONNECTION_DIST_SQ) {
+                            const opacity = (1 - Math.sqrt(distSq) / CONNECTION_DISTANCE) * 0.12;
+                            ctx.beginPath();
+                            ctx.moveTo(a.x, a.y);
+                            ctx.lineTo(b.x, b.y);
+                            ctx.strokeStyle = `rgba(139, 92, 246, ${opacity})`;
+                            ctx.stroke();
+                        }
                     }
                 }
             }
 
-            // Mouse glow
-            if (mouse.x > 0 && mouse.y > 0) {
+            // Mouse glow — only every 3 frames
+            if (frameCount % 3 === 0 && mouse.x > 0 && mouse.y > 0) {
                 const grd = ctx.createRadialGradient(
                     mouse.x, mouse.y, 0,
                     mouse.x, mouse.y, MOUSE_RADIUS

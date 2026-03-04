@@ -43,7 +43,7 @@ export default function NoiseMesh({ activeSection = 0 }) {
                 >
                     {/* Blob 1 - Top right */}
                     <motion.div
-                        className="absolute rounded-full blur-[120px]"
+                        className="absolute rounded-full blur-[80px] will-change-transform"
                         style={{
                             width: "50vw",
                             height: "50vw",
@@ -67,7 +67,7 @@ export default function NoiseMesh({ activeSection = 0 }) {
 
                     {/* Blob 2 - Bottom left */}
                     <motion.div
-                        className="absolute rounded-full blur-[100px]"
+                        className="absolute rounded-full blur-[70px] will-change-transform"
                         style={{
                             width: "40vw",
                             height: "40vw",
@@ -92,7 +92,7 @@ export default function NoiseMesh({ activeSection = 0 }) {
 
                     {/* Blob 3 - Center */}
                     <motion.div
-                        className="absolute rounded-full blur-[140px]"
+                        className="absolute rounded-full blur-[90px] will-change-transform"
                         style={{
                             width: "35vw",
                             height: "35vw",
