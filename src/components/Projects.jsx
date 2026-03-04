@@ -1,5 +1,5 @@
 // src/components/Projects.jsx
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { FiExternalLink, FiChevronRight } from "react-icons/fi";
 
@@ -64,123 +64,82 @@ const cardVariants = {
 };
 
 function ProjectCard({ project }) {
-    const [hoverPos, setHoverPos] = useState({ x: 0.5, y: 0.5 });
-    const [isHovered, setIsHovered] = useState(false);
-
-    const handleMouseMove = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        setHoverPos({
-            x: (e.clientX - rect.left) / rect.width,
-            y: (e.clientY - rect.top) / rect.height,
-        });
-    };
-
-    // 3D tilt values based on mouse position
-    const rotateX = isHovered ? (hoverPos.y - 0.5) * -12 : 0;
-    const rotateY = isHovered ? (hoverPos.x - 0.5) * 12 : 0;
+    const linkUrl = project.live || project.github || "#";
 
     return (
-        <motion.div
+        <motion.a
+            href={linkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             variants={cardVariants}
-            onMouseMove={handleMouseMove}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            className="perspective-container"
+            whileHover={{ y: -6, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="group relative block cursor-pointer"
         >
-            <motion.div
-                animate={{
-                    rotateX,
-                    rotateY,
-                    scale: isHovered ? 1.02 : 1,
+            {/* Background glow */}
+            <div
+                className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"
+                style={{
+                    background: `radial-gradient(300px circle at 50% 50%, ${project.accent}20, transparent 60%)`,
                 }}
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                style={{ transformStyle: "preserve-3d" }}
-                className="relative group"
-            >
-                {/* Background glow that follows mouse */}
-                <div
-                    className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"
-                    style={{
-                        background: `radial-gradient(400px circle at ${hoverPos.x * 100}% ${hoverPos.y * 100}%, ${project.accent}20, transparent 60%)`,
-                    }}
-                />
+            />
 
-                {/* Card */}
-                <div className="relative glass rounded-2xl overflow-hidden border border-white/[0.06] group-hover:border-white/[0.12] transition-all duration-500">
-                    {/* Top gradient strip */}
-                    <div className={`h-[3px] w-full bg-gradient-to-r ${project.gradient}`} />
+            {/* Card */}
+            <div className="relative glass rounded-2xl overflow-hidden border border-white/[0.06] group-hover:border-white/[0.12] transition-all duration-500">
+                {/* Top gradient strip */}
+                <div className={`h-[3px] w-full bg-gradient-to-r ${project.gradient}`} />
 
-                    <div className="p-5">
-                        {/* Header */}
-                        <div className="flex items-start justify-between mb-3">
-                            <div>
-                                <h3 className="text-lg font-bold text-white mb-0.5">
-                                    {project.title}
-                                </h3>
-                                <p className="text-[11px] font-mono text-white/35">
-                                    {project.subtitle}
-                                </p>
-                            </div>
-                            {project.live && (
-                                <motion.a
-                                    href={project.live}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    whileHover={{ scale: 1.15, rotate: -5 }}
-                                    whileTap={{ scale: 0.9 }}
-                                    className="p-2 rounded-lg glass text-white/40 hover:text-white transition-colors"
-                                    aria-label={`${project.title} live site`}
-                                >
-                                    <FiExternalLink className="text-sm" />
-                                </motion.a>
-                            )}
+                <div className="p-5">
+                    {/* Header */}
+                    <div className="flex items-start justify-between mb-3">
+                        <div>
+                            <h3 className="text-lg font-bold text-white mb-0.5">
+                                {project.title}
+                            </h3>
+                            <p className="text-[11px] font-mono text-white/35">
+                                {project.subtitle}
+                            </p>
                         </div>
-
-                        {/* Description */}
-                        <p className="text-xs text-white/35 leading-relaxed mb-4">
-                            {project.description}
-                        </p>
-
-                        {/* Tech tags */}
-                        <div className="flex flex-wrap gap-1.5">
-                            {project.tech.map((t) => (
-                                <span
-                                    key={t}
-                                    className="text-[10px] px-2.5 py-1 rounded-full font-medium"
-                                    style={{
-                                        backgroundColor: `${project.accent}12`,
-                                        color: project.accent,
-                                        border: `1px solid ${project.accent}20`,
-                                    }}
-                                >
-                                    {t}
-                                </span>
-                            ))}
+                        <div
+                            className="p-2 rounded-lg glass text-white/40 group-hover:text-white transition-colors"
+                        >
+                            <FiExternalLink className="text-sm" />
                         </div>
+                    </div>
 
-                        {/* Hover indicator */}
-                        {project.live && (
-                            <motion.a
-                                href={project.live}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="mt-3 flex items-center gap-1 text-[11px] font-medium cursor-pointer"
-                                style={{ color: project.accent }}
-                                initial={{ opacity: 0, x: -8 }}
-                                animate={{
-                                    opacity: isHovered ? 1 : 0,
-                                    x: isHovered ? 0 : -8,
+                    {/* Description */}
+                    <p className="text-xs text-white/35 leading-relaxed mb-4">
+                        {project.description}
+                    </p>
+
+                    {/* Tech tags */}
+                    <div className="flex flex-wrap gap-1.5">
+                        {project.tech.map((t) => (
+                            <span
+                                key={t}
+                                className="text-[10px] px-2.5 py-1 rounded-full font-medium"
+                                style={{
+                                    backgroundColor: `${project.accent}12`,
+                                    color: project.accent,
+                                    border: `1px solid ${project.accent}20`,
                                 }}
-                                transition={{ duration: 0.25 }}
                             >
-                                Visit Project
-                                <FiChevronRight className="text-xs" />
-                            </motion.a>
-                        )}
+                                {t}
+                            </span>
+                        ))}
+                    </div>
+
+                    {/* Hover indicator */}
+                    <div
+                        className="mt-3 flex items-center gap-1 text-[11px] font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        style={{ color: project.accent }}
+                    >
+                        Visit Project
+                        <FiChevronRight className="text-xs" />
                     </div>
                 </div>
-            </motion.div>
-        </motion.div>
+            </div>
+        </motion.a>
     );
 }
 
