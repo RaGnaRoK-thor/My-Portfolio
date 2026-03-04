@@ -11,6 +11,7 @@ const projects = [
             "Full-stack industrial optimization platform processing 7000+ data points with real-time data streaming via WebSockets. Predictive analytics dashboards and AI-driven process optimization.",
         tech: ["Python", "FastAPI", "React", "TypeScript", "WebSockets"],
         live: "https://kiln-ai-final.vercel.app",
+        github: "https://github.com/RaGnaRoK-thor/Kiln-AI",
         gradient: "from-violet-600 via-purple-500 to-fuchsia-500",
         accent: "#8b5cf6",
     },
@@ -21,6 +22,7 @@ const projects = [
             "Migrated a static HTML site to Next.js 14 with Server-Side Rendering and App Router. Achieved significant performance gains through modern React patterns.",
         tech: ["Next.js 14", "React", "SSR", "App Router"],
         live: "https://canoply-replica.vercel.app",
+        github: "https://github.com/RaGnaRoK-thor/Canoply-Replica",
         gradient: "from-cyan-500 via-blue-500 to-indigo-500",
         accent: "#06b6d4",
     },
@@ -30,6 +32,7 @@ const projects = [
         description:
             "Voice-controlled AI assistant executing 15+ automation tasks using custom NLP classifiers and the Groq API. Intelligent task routing and natural language understanding.",
         tech: ["Python", "Groq API", "NLP", "Speech Recognition"],
+        live: "https://github.com/RaGnaRoK-thor/JARVIS",
         gradient: "from-amber-500 via-orange-500 to-red-500",
         accent: "#f59e0b",
     },
@@ -39,6 +42,7 @@ const projects = [
         description:
             "SPA for inventory management with 15 RESTful API endpoints, real-time search, and a responsive dashboard for tracking stock levels and transactions.",
         tech: ["Python", "Flask", "SQLite", "JavaScript"],
+        live: "https://github.com/RaGnaRoK-thor/InvSys",
         gradient: "from-emerald-500 via-green-500 to-teal-500",
         accent: "#10b981",
     },
@@ -155,19 +159,24 @@ function ProjectCard({ project }) {
                         </div>
 
                         {/* Hover indicator */}
-                        <motion.div
-                            className="mt-3 flex items-center gap-1 text-[11px] font-medium"
-                            style={{ color: project.accent }}
-                            initial={{ opacity: 0, x: -8 }}
-                            animate={{
-                                opacity: isHovered ? 1 : 0,
-                                x: isHovered ? 0 : -8,
-                            }}
-                            transition={{ duration: 0.25 }}
-                        >
-                            {project.live ? "Visit Project" : "View Details"}
-                            <FiChevronRight className="text-xs" />
-                        </motion.div>
+                        {project.live && (
+                            <motion.a
+                                href={project.live}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-3 flex items-center gap-1 text-[11px] font-medium cursor-pointer"
+                                style={{ color: project.accent }}
+                                initial={{ opacity: 0, x: -8 }}
+                                animate={{
+                                    opacity: isHovered ? 1 : 0,
+                                    x: isHovered ? 0 : -8,
+                                }}
+                                transition={{ duration: 0.25 }}
+                            >
+                                Visit Project
+                                <FiChevronRight className="text-xs" />
+                            </motion.a>
+                        )}
                     </div>
                 </div>
             </motion.div>
